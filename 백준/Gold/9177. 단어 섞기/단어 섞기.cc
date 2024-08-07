@@ -4,49 +4,51 @@
 using namespace std;
 
 int T;
-string SA[3];
+string s1, s2 , s3;
 
-bool visited[210][210];
+bool find_flag;
 
-struct node{
-    int oneidx;
-    int twoidx;
-    int findidx;
-};
+void dfs(int s1_idx, int s2_idx, int s3_idx){
 
-bool bfs(){
-    queue<node> q;
-    q.push({0,0,0});
-    visited[0][0] = true;
+    if (find_flag) return;
 
-    while(!q.empty()){
-        int one_idx = q.front().oneidx;
-        int two_idx = q.front().twoidx;
-        int find_idx = q.front().findidx;
-        q.pop();
-
-        if (find_idx >= SA[2].size()) return true;
-
-        if (one_idx < SA[0].size() &&
-            SA[0][one_idx] == SA[2][find_idx] &&
-            !visited[one_idx+1][two_idx]){
-
-            q.push({one_idx + 1,two_idx,find_idx + 1});
-            visited[one_idx + 1][two_idx] = true;
-        }
-
-        if (two_idx < SA[1].size() &&
-           SA[1][two_idx] == SA[2][find_idx] &&
-           !visited[one_idx][two_idx+1]){
-
-            q.push({one_idx, two_idx + 1, find_idx + 1});
-            visited[one_idx][two_idx + 1] = true;
-        }
-
-
+    if (s3_idx >= s3.size()){
+        find_flag = true;
+        return;
     }
 
-    return false;
+    if (s1_idx < s1.size() && s1[s1_idx] == s3[s3_idx]){
+        dfs(s1_idx + 1, s2_idx, s3_idx + 1);
+    }
+
+    if (s2_idx < s2.size() && s2[s2_idx] == s3[s3_idx]){
+        dfs(s1_idx, s2_idx + 1, s3_idx + 1);
+    }
+
+}
+
+bool check(){
+    if (s1.size() + s2.size() != s3.size()) return false;
+
+    int alpha[26];
+
+    memset(alpha,0, sizeof(alpha));
+
+    for (int i = 0; i < s1.size(); i++){
+        alpha[s1[i] - 'a']++;
+    }
+    for (int i = 0; i < s2.size(); i++){
+        alpha[s2[i] - 'a']++;
+    }
+    for (int i = 0; i < s3.size(); i++){
+        alpha[s3[i] - 'a']--;
+    }
+
+    for (int i = 0; i < 26; i++){
+        if (alpha[i]) return false;
+    }
+
+    return true;
 
 }
 
@@ -56,20 +58,29 @@ int main(){
     cin.tie(0); cout.tie(0);
 
     cin >> T;
-    int t_cnt = 1;
-    while(T--){
-        cin >> SA[0] >> SA[1] >> SA[2];
 
-        memset(visited, 0 , 210 * 210);
+    for (int t  = 1; t <= T; t++){
+        cin >> s1 >> s2 >> s3;
 
-        if (bfs()){
-            cout << "Data set " << t_cnt << ": yes\n";
+        find_flag = false;
+
+        if (check()){
+            
+
+            dfs(0,0,0);
+
+            if (find_flag){
+                cout << "Data set " << t << ": yes\n";
+            }else{
+             cout << "Data set " << t << ": no\n";
+            }
         }else{
-            cout << "Data set " << t_cnt << ": no\n";
+            cout << "Data set " << t << ": no\n";
         }
 
-        t_cnt++;
+        
 
-    } 
+
+    }
 
 }
