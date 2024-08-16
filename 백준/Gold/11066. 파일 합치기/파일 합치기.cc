@@ -1,48 +1,51 @@
 #include<bits/stdc++.h>
 
-
 using namespace std;
 
-int t;
-int k;
+int T,K;
 
 int dp[510][510];
-int A[510];
+int cost[510];
+int range[510][510];
 int sum[510];
-
+ 
 int main(){
     ios_base::sync_with_stdio(false);
     cin.tie(0); cout.tie(0);
 
-    cin >> t;
+    cin >> T;
 
-    while(t--){
-        memset(dp,0,510*510);
-        memset(A, 0, sizeof(A));
-        memset(sum, 0, sizeof(sum));
-
-        cin >> k;
-        int num;
-        for (int i = 1; i <= k; i++){
-            cin >> num;
-            sum[i] = num + sum[i-1];
+    while(T--){
+        cin >> K;
+        for (int i = 1; i <= K; i++){
+            cin >> cost[i];
+            sum[i] = cost[i] + sum[i-1];
         }
 
-        for (int d = 1; d < k; d++){
-            for (int st = 1; st+d <= k; st++){
-                int end = st + d;
+        for (int i = 1; i <= K; i++){
+            range[i-1][i] = i;
+        }
+
+        for (int d = 2; d <= K; d++){
+            for (int st = 0; st+d <= K; st++){
+                int end = st+d;
                 dp[st][end] = 1e9;
 
-                for (int mid = st; mid < end; mid++){
-                    dp[st][end] = 
-                        min(dp[st][end], dp[st][mid] +
-                         dp[mid+1][end] + sum[end] - sum[st-1]);
+                for (int mid = range[st][end-1]; mid <= range[st+1][end]; mid++){
+
+                    int val = dp[st][mid] + dp[mid][end] + sum[end] - sum[st];
+                    if (dp[st][end] > val){
+                        dp[st][end] = val;
+                        range[st][end] = mid;
+                    }
                 }
 
             }
         }
 
-        cout << dp[1][k] << "\n";
+        cout << dp[0][K] << "\n";
+
+
 
     }
 
