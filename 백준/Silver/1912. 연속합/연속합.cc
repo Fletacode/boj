@@ -7,33 +7,8 @@ using namespace std;
 
 int N;
 
-int divdeMaxSum(vector<int> &v, int st,int end ){
-
-    if (st == end) return v[st];
-
-    int mid = (st+end) / 2;
-
-    int left = INT_MIN; int right = INT_MIN;
-    int sum = 0;
-
-    for (int i = mid; i >= st; i--){
-        sum += v[i];
-        left = max(left, sum); 
-    }
-
-    sum  = 0;
-
-    for (int i = mid + 1; i <= end; i++){
-        sum += v[i];
-        right = max(right, sum);
-    }
-
-    int single = max(divdeMaxSum(v,st, mid ) , divdeMaxSum(v, mid + 1, end));
-
-    return max(single, left + right);
-
-}
-
+int dp[100001];
+int A[100001];
 
 int main(){
     ios_base::sync_with_stdio(false);
@@ -44,10 +19,18 @@ int main(){
     vector<int> v;
 
     for (int i = 0; i < N; i++){
-        int num;
-        cin >> num; v.push_back(num);
+        cin >> A[i];
     }
 
-    cout << divdeMaxSum(v,0,N-1);
+    dp[0] = A[0];
+
+    int sum = A[0];
+
+    for (int i = 1; i < N; i++){
+        dp[i] = max(dp[i-1] + A[i] , A[i]);
+        sum = max(dp[i], sum);
+    }
+
+    cout << sum;
 
 }
