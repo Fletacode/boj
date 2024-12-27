@@ -4,50 +4,51 @@
 using namespace std;
 
 int N,K;
-bool visited[250000];
+bool visited[200000];
 
-int MAX_DIS = 100000;
+const int maxLength = 100010;
 
-int bfs(){
-    int ans = 1e9;
+int bfs(int st){
 
     queue<int> q;
-    q.push(N);
-    visited[N] = true;
-
+    visited[st] = true;
+    q.push(st);
     int cnt = -1;
 
     while(!q.empty()){
-        
-        cnt += 1;
+        cnt++;
         int size = q.size();
 
         while(size--){
-            int now = q.front();
+            int next = q.front();
             q.pop();
 
-            if (now == K) ans = min(cnt, ans);
+            if (next == K){
+                return cnt;
+            }
 
-        if (now + 1 <= MAX_DIS && !visited[now + 1]){
-            visited[now + 1] = true;
-            q.push(now + 1);
-        }
+            if (next-1 >= 0 && !visited[next-1]){
+                q.push(next-1);
+                visited[next-1] = true;
+            }
 
-        if (now - 1 >= 0 && !visited[now - 1]){
-            visited[now - 1] = true;
-            q.push(now - 1);
-        }
+            if (next+1 <= maxLength && !visited[next+1]){
+                q.push(next+1);
+                visited[next+1] = true;
+            }
 
-        if (now * 2 <= MAX_DIS && !visited[now * 2]){
-            visited[now * 2] = true;
-            q.push(now * 2);
-        }
+            if (next*2 <= maxLength && !visited[next*2]){
+                q.push(next*2);
+                visited[next*2] = true;
+            }
 
         }
+        
 
     }
 
-    return ans;
+    return cnt;
+
 }
 
 
@@ -57,7 +58,9 @@ int main(){
 
     cin >> N >> K;
 
-    cout << bfs();
-    
-   
+    cout << bfs(N);
+
+
+
+
 }
