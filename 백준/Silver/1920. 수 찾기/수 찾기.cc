@@ -7,25 +7,18 @@ int N,M;
 vector<int> v;
 vector<int> v2;
 
-int isFind(int target){
+bool isFind(int target){
 
-    int st = 0;
-    int end = v.size()-1;
+    int idx = lower_bound(v.begin(), v.end(), target) - v.begin();
 
-    while(st <= end){
-        int mid = (st+end) / 2;
-
-        if (target > v[mid]){
-            st = mid + 1;
-        } else if (target < v[mid]){
-            end = mid - 1;
-        } else{
-            return true;
-        }
-
+    if (idx > v.size()-1 || idx < 0){
+        return false;
+    } else if (v[idx] == target){
+        return true;
+    } else{
+        return false;
     }
 
-    return false;
 }
 
 
