@@ -2,18 +2,21 @@
 
 using namespace std;
 
-
+set<string> s;
 
 bool solution(vector<string> book) {
     bool answer = true;
     
-    sort(book.begin(), book.end());
-        
+    for (int i  =0; i < book.size(); i++) {
+        s.insert(book[i]);
+    }
     
-    
-    for (int i = 0; i < book.size() - 1; i++) {
-        if (book[i] == book[i+1].substr(0,book[i].size())) {
-            return false;
+    for (int i  =0; i < book.size(); i++) {
+        for (int j = 0; j < book[i].size() - 1; j++) {
+            string temp = book[i].substr(0, j + 1);
+            if (s.find(temp) != s.end()){
+                return false;
+            }
         }
     }
     
